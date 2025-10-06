@@ -19,7 +19,7 @@ For an example, lmeSplines extends the functionality of the nlme package by enab
 
 ```R
 
-#Packages from CRAN
+# Packages from CRAN:
 
 library(lmeSplines)
 
@@ -29,23 +29,22 @@ library(nlme)
 
 source("calculate_ci_lmesplines.R")
 
-#Load a data
-
+#Load a data:
 
 load(example_data)
 
 
-#Data includes:
+#'Data includes:
 
-@param "y" Continuous response variable
+#'@param "y" Continuous response variable
 
-@param "elapsed_time" Continuous elapsed time variable (the trend term)
+#'@param "elapsed_time" Continuous elapsed time variable (the trend term)
 
-@param "interrup" Binary interruption variable (0= time before the interruption point, 1= time after the interruption point.
+#'@param "interrup" Binary interruption variable (0= time before the interruption point, 1= time after the interruption point.
 
-@param "time_after_interrup" Continuous time variable (the slope term after the interruption point)
+#'@param "time_after_interrup" Continuous time variable (the slope term after the interruption point)
 
-@param "strata" Categorical group variable (for instance, population strata)
+#'@param "strata" Categorical group variable (for instance, population strata)
 
 
 
@@ -67,7 +66,7 @@ random=list(~1|strata,strata=pdIdent(~Zt)))
 
 calculate_ci_lmesplines(fit)
 
-#Figure:
+# Figure:
 
 ggplot(example_data,aes(x=elapsed_time,y=y,colour=strata)) + geom_point() + geom_line(aes(y = fitted(fit))) + labs(y="Response",x="Time",colour="Strata") 
 
