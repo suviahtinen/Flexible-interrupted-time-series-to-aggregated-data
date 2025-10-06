@@ -76,10 +76,18 @@ summary(fit)
 
 ## References
 
-Pinheiro, J. C. and Bates, D. M. (2000) Mixed-Effects Models in S and S-PLUS Springer-Verlag, New
-York.
+Bernal JL, Cummins S, Gasparrini A. Interrupted time series regression for the evaluation of public health interventions: a tutorial. Int J Epidemiol. 2017;46:1: 348–355. doi: 10.1093/ije/dyw098. 
 
-Verbyla, A., Cullis, B. R., Kenward, M. G., and Welham, S. J. (1999) The analysis of designed experiments and longitudinal data by using smoothing splines. Appl. Statist. 48(3) 269–311.
+Durrleman S, Simon R. Flexible regression models with cubic splines. Stat Med. 1989;8:5: 551–561. doi: 10.1002/sim.4780080504. 
+
+Pinheiro JC, Bates DM. Mixed-Effects Models in S and S-PLUS Springer-Verlag, New York 2000.
+
+Rousseeuw PJ. Silhouettes: a graphical aid to the inter-pretation and validation of cluster analysis. J Comput Appl Math. 1987; 20:53–65. doi:10.1016/0377-0427(87)90125-7.
+
+Roux MA. Comparative Study of Divisive and Agglomerative Hierarchical Clustering Algorithms. J Classif. 2018; 35:345–366. doi:10.1007/s00357-018-9259-9
+
+Verbyla A, Cullis BR, Kenward MG, Welham SJ. The analysis of designed experiments and longitudinal data by using smoothing splines. Appl Statist. 1999;48(3): 269–311.
+
 
 
 ## Authors
