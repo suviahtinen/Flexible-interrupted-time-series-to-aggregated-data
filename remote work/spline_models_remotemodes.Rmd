@@ -51,16 +51,17 @@ The fields in "mean_data_remotework2" dataset include:
 
 set.seed(123)
 
+
+#Confidence intervals to lmespline models from R- code named "calculate_ci_lmesplines.R":
+
+source("calculate_ci_lmesplines.R")
+
 #Spline models:
 
 mean_data_remotework$Zt0 <- smspline(~ elapsed_time, data=mean_data_remotework)
 
 fit_remotework_energy_for_euro2<- lme(energy_for_euro ~ elapsed_time  + interrupted01 + weeks_after_preCOVID + elapsed_time:WorkFirst  + interrupted01:WorkFirst + weeks_after_preCOVID:WorkFirst, data=mean_data_remotework,random=list(~1|WorkFirst,WorkFirst=pdIdent(~Zt0)))
 
-
-#Confidence intervals to lmespline models:
-
-source("calculate_ci_lmesplines.R")
 
 calculate_ci_lmesplines(fit_remotework_energy_for_euro2)
 
@@ -72,10 +73,7 @@ mean_data_remotework$Date<- as.Date(paste0(mean_data_remotework$year, "-", mean_
 
 #Figure:
 
-ggplot(mean_data_remotework,aes(x=Date,y=energy_for_euro,colour=WorkFirst)) + geom_point() + geom_line(aes(y = fitted(fit_remotework_energy_for_euro2))) + labs(y="Weekly means of purhases energies per euros (MJ/€)",x="Time (month/year)",colour="Working/studying in the first year of COVID (03/2020-02/2021) 
-and WorkFirst_Educationcation attainment (H=high and L=low)") + theme_bw() + scale_x_date(limits=c(as.Date("2019-03-03"),as.Date("2021-05-07")),expand = c(0, 0),date_breaks = "1 month", date_minor_breaks = "1 week",date_labels = "%m/%Y") + geom_vline(xintercept=as.Date("2020-03-16"),linetype="dashed")
-
-
+ggplot(mean_data_remotework,aes(x=Date,y=energy_for_euro,colour=WorkFirst)) + geom_point() + geom_line(aes(y = fitted(fit_remotework_energy_for_euro2))) + labs(y="Weekly means of purhases energies per euros (MJ/€)",x="Time (month/year)",colour="Working/studying in the first year of COVID (03/2020-02/2021)") + theme_bw() + scale_x_date(limits=c(as.Date("2019-03-03"),as.Date("2021-05-07")),expand = c(0, 0),date_breaks = "1 month", date_minor_breaks = "1 week",date_labels = "%m/%Y") + geom_vline(xintercept=as.Date("2020-03-16"),linetype="dashed")
 
 
 #Spline models with adjusted education:
