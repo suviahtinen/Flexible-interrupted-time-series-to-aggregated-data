@@ -36,15 +36,15 @@ library(nlme)
 
 
 
-\#Load a data
+#Load a data
 
 
 
-load(example\_data)
+load(example_data)
 
 
 
-\#Data includes:
+#Data includes:
 
 
 
@@ -54,7 +54,7 @@ load(example\_data)
 
 @param "interrup" Binary interruption variable (0= time before the interruption point, 1= time after the interruption point.
 
-@param "time\_after\_interrup" Continuous time variable (the slope term after the interruption point)
+@param "time_after_interrup" Continuous time variable (the slope term after the interruption point)
 
 @param "strata" Categorical group variable (for instance, population strata)
 
@@ -64,19 +64,19 @@ load(example\_data)
 
 
 
-\# Generate spline Z-matrix (using as random effects):
+# Generate spline Z-matrix (using as random effects):
 
 
 
-example\_data$Zt <- smspline(~ elapsed\_time, data = example\_data)
+example_data$Zt <- smspline(~ elapsed_time, data = example_data)
 
 
 
 
 
-\# Fit the model
+# Fit the model
 
-fit <- lme(y ~ elapsed\_time + interrup + time\_after\_interrup + elapsed\_time:strata + interrup:strata + time\_after\_interrup:strata, data=example\_data,
+fit <- lme(y ~ elapsed_time + interrup + time_after_interrup + elapsed_time:strata + interrup:strata + time_after_interrup:strata, data=example_data,
 
 random=list(~1|strata,strata=pdIdent(~Zt0)))
 
@@ -84,7 +84,7 @@ random=list(~1|strata,strata=pdIdent(~Zt0)))
 
 
 
-\# Summarize results
+# Summarize results
 
 summary(fit)
 
@@ -96,7 +96,7 @@ summary(fit)
 
 
 
-\## References
+## References
 
 
 
@@ -130,19 +130,19 @@ Appl. Statist. 48(3) 269–311.
 
 
 
-\## Authors
+## Authors
 
 
 
-\- \[@suviahtinen](https://www.github.com/suviahtinen)
+- [@suviahtinen](https://www.github.com/suviahtinen)
 
 
 
 
 
-\## Licence
+## Licence
 
 
 
-\[!\[MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[MIT](https://choosealicense.com/licenses/mit/)
 
