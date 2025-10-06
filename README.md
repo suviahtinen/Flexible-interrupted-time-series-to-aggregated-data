@@ -62,7 +62,7 @@ example_data$Zt <- smspline(~ elapsed_time, data = example_data)
 
 fit <- lme(y ~ elapsed_time + interrup + time_after_interrup + elapsed_time:strata + interrup:strata + time_after_interrup:strata, data=example_data,
 
-random=list(~1|strata,strata=pdIdent(~Zt0)))
+random=list(~1|strata,strata=pdIdent(~Zt)))
 
 
 # Summarize results
