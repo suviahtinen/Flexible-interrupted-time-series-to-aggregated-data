@@ -28,7 +28,7 @@ library(lmeSplines)
 
 library(nlme)
 
-#Code to calculate confidence intervals:
+#Code to calculate 95 % confidence intervals:
 
 source("calculate_ci_lmesplines.R")
 
