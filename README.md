@@ -22,16 +22,17 @@ For an example, lmeSplines extends the functionality of the nlme package by enab
 
 ```R
 
-
+#Packages from CRAN
 
 library(lmeSplines)
 
 library(nlme)
 
+#Code to calculate confidence intervals:
 
+source("calculate_ci_lmesplines.R")
 
 #Load a data
-
 
 
 load(example_data)
@@ -65,10 +66,13 @@ fit <- lme(y ~ elapsed_time + interrup + time_after_interrup + elapsed_time:stra
 random=list(~1|strata,strata=pdIdent(~Zt)))
 
 
-# Summarize results
+# Summarize results:
 
-summary(fit)
+calculate_ci_lmesplines(fit)
 
+#Figure:
+
+ggplot(example_data,aes(x=elapsed_time,y=y,colour=strata)) + geom_point() + geom_line(aes(y = fitted(fit))) + labs(y="Response",x="Time",colour="Strata") 
 
 
 ```
