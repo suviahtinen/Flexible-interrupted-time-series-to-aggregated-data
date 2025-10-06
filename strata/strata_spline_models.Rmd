@@ -55,20 +55,29 @@ The fields in "energy_adjusted_mean_data" dataset include:
 
 set.seed(123)
 
+# 95 % confidence intervals to mixed-models with splines:
+
+source("calculate_ci_lmesplines.R")
+
+#Calculate agglomerative hierarchical clustering results:
+
+source("cluster_ind_calc_average.R")
+
+#Generate new data to combined strata:  
+
+source("data_new_strata.R")
+
 #Numbers of strata
 strata_num<-length(levels(energy_adjusted_mean_data$strata_SES))
 
-#Spline models to 114 strata:
+#Spline models to all strata:
 
 energy_adjusted_mean_data$Zt0 <- smspline(~ elapsed_time, data=energy_adjusted_mean_data) #smoothing splines
 
 fit_strata_SES_energy<- lme(energy_for_euro ~ elapsed_time + interrupted01 + weeks_after_preCOVID + elapsed_time:strata_SES + interrupted01:strata_SES + weeks_after_preCOVID:strata_SES, data=energy_adjusted_mean_data,
 random=list(~1|strata_SES,strata_SES=pdIdent(~Zt0)))
 
-
-fit_strata_SES_energy_nosmooth<- lme(energy_for_euro ~ elapsed_time + interrupted01 + weeks_after_preCOVID + elapsed_time:strata_SES + interrupted01:strata_SES + weeks_after_preCOVID:strata_SES , data=energy_adjusted_mean_data,
-random=list(~1|strata_SES,strata_SES=pdIdent(~elapsed_time)))
-
+calculate_ci_lmesplines(fit_strata_SES_energy)
 
 energy_adjusted_mean_data$Date<- as.Date(paste0(energy_adjusted_mean_data$year, "-", energy_adjusted_mean_data$weeknum, "-", 7), format = "%Y-%U-%u")
 
@@ -77,17 +86,16 @@ energy_adjusted_mean_data$Date<- as.Date(paste0(energy_adjusted_mean_data$year, 
 ggplot(energy_adjusted_mean_data,aes(x=Date,y=energy_for_euro,colour=strata_SES)) + geom_line(aes(y = fitted(fit_strata_SES_energy))) + labs(y="Weekly means of energy per used euros (MJ/e)",x="Time (month/year)",colour="Strata") + theme_bw() + scale_x_date(limits=c(as.Date("2019-03-03"),as.Date("2021-05-07")),date_labels = "%m/%Y",date_breaks="3 months") + geom_vline(xintercept=as.Date("2020-03-16"),linetype="dashed") 
 #dev.off()
 
-source("cluster_ind_calc_average.R")
+
+#Results to agglomerative hierarchical clustering:
+
 new_segs<-cluster_ind_calc_average(elapsed_time=energy_adjusted_mean_data$elapsed_time,strata=energy_adjusted_mean_data$strata_SES,fit_model=fitted(fit_strata_SES_energy),strata_num=strata_num, samples=energy_adjusted_mean_data$sample_sizes)
 
 new_segs
 
-#Generate new data to 5 new strata:
-
-source("data_new_strata.R")
+#Generate new data to combined 5 strata:
 
 new_strata_data<-data_new_strata(new_strata=new_segs,data=energy_adjusted_without_mean_data, strata_number=5)
-
 
 new_strata_data$Zt0 <- smspline(~ elapsed_time, data=new_strata_data) #smoothing splines
 
@@ -95,6 +103,9 @@ new_strata_data$Zt0 <- smspline(~ elapsed_time, data=new_strata_data) #smoothing
 
 fit_new_strata_SES_energy<- lme(energy_for_euro~ elapsed_time + interrupted01 + weeks_after_preCOVID+ elapsed_time:new_strata_SES+ interrupted01:new_strata_SES + weeks_after_preCOVID:new_strata_SES, data=new_strata_data,
 random=list(~1|new_strata_SES,new_strata_SES=pdIdent(~Zt0)))
+
+
+calculate_ci_lmesplines(fit_new_strata_SES_energy)
 
 #Figure:
 

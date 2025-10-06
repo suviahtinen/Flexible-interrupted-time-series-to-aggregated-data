@@ -52,7 +52,7 @@ The fields in "mean_data_remotework2" dataset include:
 set.seed(123)
 
 
-#Confidence intervals to lmespline models from R- code named "calculate_ci_lmesplines.R":
+# 95 % confidence intervals to mixed-models with splines:
 
 source("calculate_ci_lmesplines.R")
 
