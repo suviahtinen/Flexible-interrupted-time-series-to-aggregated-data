@@ -1,4 +1,4 @@
-# Flexible interrupted time series by using lmeSplines
+# Flexible interrupted time series to aggregated data
 
 
 
