@@ -2,7 +2,7 @@
 
 
 
-This repository contains code and resources for analyzing flexible interrupted time series models, specifically segmented mixed-effects models, using aggregated data. These models are particularly useful for evaluating the impact of interventions or policy changes over time when individual-level data is not available or difficult to use. By incorporating spline-based random effects and segmented trends, the approach allows for flexible modeling of time-dependent changes and discontinuities. 
+This repository contains code and resources for analyzing flexible interrupted time series models, specifically segmented mixed-effects models, using aggregated data. These models are particularly useful for evaluating the impact of interventions, policy changes or the effect of unplanned global crises over time when individual-level data is not available or difficult to use. By incorporating spline-based random effects and segmented trends, the approach allows for flexible modeling of time-dependent changes and discontinuities. 
 
 
 The included scripts demonstrate how to interpret results using R packages nlme and lmeSplines. There are two folders, where are specify model structures to aggregated data by using modes of remote working/studying (remote work) and different sociodemographic groups (strata). 
