@@ -1,0 +1,104 @@
+---
+title: "Spline models to modes of remote work/study"
+author: "Suvi Ahtinen"
+date: "2025-09"
+output: html_document
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(haven)
+library(data.table)
+library(knitr)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(lmeSplines)
+library(lubridate)
+library(rstatix)
+library(aod)
+
+#Read datasets:
+
+mean_data_remotework<-read.table("data_with_orginal_remoteworkstudy_modes.csv")
+
+mean_data_remotework2<-read.table("data_with_education_adjusted_remoteworkstudy_modes.csv")
+
+
+```
+The fields in "mean_data_remotework" dataset include:
+
+@param "weeknum" Numbers of weeks (1-52)
+@param "year" Numbers of year (2019-2021)
+@param "energy_for_euro" Purchases' energy divided by inflation fixed euros (MJ/euro)
+@param "elapsed_time" Elapsed time variable (the trend term) by weeks, started from the first week of March 2019, ended to the second week of May 2021 (weeks numbered as 1-113)
+@param "interrupted01" Binary interrupted variable (0= weeks before the pandemic started, 1= weeks after the pandemic started)
+@param "weeks_after_preCOVID" Weeks after the pandemic started from the second week of March 2020 (the slope term after the interruption point) (weeks numbered as 55-113)
+@param "WorkFirst" 6 modes of the remote work and study: “(I was working/studying) Mostly or completely remotely”, “More often remotely than on-site”, “Approximately as often remotely as on-site”, “Less often remotely than on-site”, “Mostly or completely on-site” and “Not working or studying at all”
+
+
+The fields in "mean_data_remotework2" dataset include:
+
+@param "weeknum" Numbers of weeks (1-52)
+@param "year" Numbers of year (2019-2021)
+@param "energy_for_euro" Purchases' energy divided by inflation fixed euros (MJ/euro)
+@param "elapsed_time" Elapsed time variable (the trend term) by weeks, started from the first week of March 2019, ended to the second week of May 2021 (1-113)
+@param "interrupted01" Binary interrupted variable (0= weeks before the pandemic, 1= weeks after the pandemic)
+@param "weeks_after_preCOVID" Weeks after the pandemic (the slope term after the interruption point), started from the second week of March 2020 (55-113)
+@param "WorkFirst_Education" Same 6 modes of the remote work and study as above, adjusted with education levels (means between the low and high education attainment in each fitted values)
+
+```{r echo=TRUE, eval=TRUE}
+
+set.seed(123)
+
+#Spline models:
+
+mean_data_remotework$Zt0 <- smspline(~ elapsed_time, data=mean_data_remotework)
+
+fit_remotework_energy_for_euro2<- lme(energy_for_euro ~ elapsed_time  + interrupted01 + weeks_after_preCOVID + elapsed_time:WorkFirst  + interrupted01:WorkFirst + weeks_after_preCOVID:WorkFirst, data=mean_data_remotework,random=list(~1|WorkFirst,WorkFirst=pdIdent(~Zt0)))
+
+
+#Confidence intervals to lmespline models:
+
+source("calculate_ci_lmesplines.R")
+
+calculate_ci_lmesplines(fit_remotework_energy_for_euro2)
+
+fit_remotework_energy_for_euro2_nosmooth<- lme(energy_for_euro ~ elapsed_time  + interrupted01 + weeks_after_preCOVID + elapsed_time:WorkFirst  + interrupted01:WorkFirst + weeks_after_preCOVID:WorkFirst, data=mean_data_remotework,random=list(~1|WorkFirst,WorkFirst=pdIdent(~elapsed_time)))
+
+calculate_ci_lmesplines(fit_remotework_energy_for_euro2_nosmooth)
+
+mean_data_remotework$Date<- as.Date(paste0(mean_data_remotework$year, "-", mean_data_remotework$weeknum, "-", 7), format = "%Y-%U-%u")
+
+#Figure:
+
+ggplot(mean_data_remotework,aes(x=Date,y=energy_for_euro,colour=WorkFirst)) + geom_point() + geom_line(aes(y = fitted(fit_remotework_energy_for_euro2))) + labs(y="Weekly means of purhases energies per euros (MJ/€)",x="Time (month/year)",colour="Working/studying in the first year of COVID (03/2020-02/2021) 
+and WorkFirst_Educationcation attainment (H=high and L=low)") + theme_bw() + scale_x_date(limits=c(as.Date("2019-03-03"),as.Date("2021-05-07")),expand = c(0, 0),date_breaks = "1 month", date_minor_breaks = "1 week",date_labels = "%m/%Y") + geom_vline(xintercept=as.Date("2020-03-16"),linetype="dashed")
+
+
+
+
+#Spline models with adjusted education:
+
+mean_data_remotework2$Zt0 <- smspline(~ elapsed_time, data=mean_data_remotework2)
+
+fit_remotework_energy_for_euro22<- lme(energy_for_euro ~ elapsed_time  + interrupted01 + weeks_after_preCOVID + elapsed_time:WorkFirst_Education  + interrupted01:WorkFirst_Education+ weeks_after_preCOVID:WorkFirst_Education, data=mean_data_remotework2,random=list(~1|WorkFirst_Education,WorkFirst_Education=pdIdent(~Zt0)))
+
+calculate_ci_lmesplines(fit_remotework_energy_for_euro2)
+
+fit_remotework_energy_for_euro2_nosmooth<- lme(energy_for_euro ~ elapsed_time  + interrupted01 + weeks_after_preCOVID + elapsed_time:WorkFirst_Education + interrupted01:WorkFirst_Education + weeks_after_preCOVID:WorkFirst_Education, data=mean_data_remotework2,random=list(~1|WorkFirst_Education,WorkFirst_Education=pdIdent(~elapsed_time)))
+
+calculate_ci_lmesplines(fit_remotework_energy_for_euro22_nosmooth)
+
+mean_data_remotework2$Date<- as.Date(paste0(mean_data_remotework2$year, "-", mean_data_remotework2$weeknum, "-", 7), format = "%Y-%U-%u")
+
+
+#Figure:
+
+ggplot(mean_data_remotework2,aes(x=Date,y=energy_for_euro,colour=WorkFirst_Education)) + geom_point() + geom_line(aes(y = fitted(fit_remotework_energy_for_euro22))) + labs(y="Weekly means of purhases energies per euros (MJ/€)",x="Time (month/year)",colour="Working/studying in the first year of COVID (03/2020-02/2021) 
+adjusted with education levels") + theme_bw() + scale_x_date(limits=c(as.Date("2019-03-03"),as.Date("2021-05-07")),expand = c(0, 0),date_breaks = "1 month", date_minor_breaks = "1 week",date_labels = "%m/%Y") +  geom_vline(xintercept=as.Date("2020-03-16"),linetype="dashed")
+
+
+
+
+```
