@@ -37,11 +37,11 @@ load(example_data)
 
 #'@param "y" Continuous response variable
 
-#'@param "elapsed_time" Continuous elapsed time variable (the trend term)
+#'@param "elapsed_time" Continuous elapsed time variable (the whole trend)
 
-#'@param "interrup" Binary interruption variable (0= time before the interruption point, 1= time after the interruption point.
+#'@param "interrup" Binary level change variable in the point of interruption (0= time before the point, 1= time after the point)
 
-#'@param "time_after_interrup" Continuous time variable (the slope term after the interruption point)
+#'@param "time_after_interrup" Continuous slope change variable (after the point of interruption)
 
 #'@param "strata" Categorical group variable (for instance, population strata)
 
