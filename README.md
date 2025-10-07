@@ -1,6 +1,6 @@
 # Flexible interrupted time series to aggregated data
 
-This repository contains code and resources for analyzing flexible interrupted time series models (segmented mixed-effects models) using aggregated data. These models are particularly useful for evaluating the impact of interventions, policy changes or the effect of unplanned global crises over time when individual-level data is not available or difficult to use. By incorporating spline-based random effects and segmented trends, the approach allows for flexible modeling of time-dependent changes and discontinuities. 
+This repository contains code and resources for analyzing flexible interrupted time series models (segmented mixed-effects models) using aggregated data. These models are particularly useful for evaluating the impact of interventions, policy changes or the effect of unplanned global crises over time when individual-level data is not available or reasonable to represent. By incorporating spline-based random effects and segmented trends, the approach allows for flexible modeling of time-dependent changes and discontinuities. 
 
 The included scripts demonstrate how to analyze changes in food purchasing behavior across various sociodemographic groups, as well as, modes of remote work (study), and how to interpret results using R packages nlme and lmeSplines. There are two folders, where are specify model structures to aggregated data by using modes of remote working/studying (remote work) and different sociodemographic groups (strata). 
 
@@ -24,6 +24,8 @@ For an example, lmeSplines extends the functionality of the nlme package by enab
 library(lmeSplines)
 
 library(nlme)
+
+library(ggplot2)
 
 #Code to calculate 95 % confidence intervals:
 
@@ -51,7 +53,6 @@ load(example_data)
 # Generate spline Z-matrix (using as random effects):
 
 
-
 example_data$Zt <- smspline(~ elapsed_time, data = example_data)
 
 
@@ -63,6 +64,8 @@ random=list(~1|strata,strata=pdIdent(~Zt)))
 
 
 # Summarize results:
+
+summary(fit)
 
 calculate_ci_lmesplines(fit)
 
