@@ -11,7 +11,7 @@ calculate_ci_lmesplines <- function(model, level = 0.95) {
   se <- sqrt(diag(vcov(model)))
   
   alpha <- 1 - level
-  z <- qnorm(1 - alpha / 2)
+  z <- qnorm((alpha/2)+level)
   
   lower <- coefs - z * se
   upper <- coefs + z * se
