@@ -53,7 +53,7 @@ load(example_data)
 example_data$Zt <- smspline(~ elapsed_time, data = example_data)
 
 
-# Fit the model
+# Fit models to every stratum, which include group-spesific intercept and Z-matrix:
 
 fit <- lme(y ~ elapsed_time + interrup + time_after_interrup + elapsed_time:strata + interrup:strata + time_after_interrup:strata, data=example_data,
 
