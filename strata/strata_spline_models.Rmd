@@ -31,18 +31,17 @@ energy_adjusted_mean_data<-read.table("data_adjusted.csv")
 The fields in "energy_adjusted_without_mean_data" dataset include:
 
 @param "id" Every participants id-number
-@param "weeknum" Numbers of weeks (1-52)
-@param "year" Numbers of year (2019-2021)
-@param "energy_MJ" Purchases' energy at megajoule (MJ)
-@param "fixed_euros_no_tobacco_uncat" Inflation fixed euros without tobacco-products
+@param "weeknum" Numbers of weeks 
+@param "year" Numbers of years 
+@param "energy_for_euro" Purchases' energy at megajoule divided by inflation fixed euros without tobacco-products (MJ/euro)
 @param "strata_SES" Categorical strata coded as numbers
 @param "sample_weights" Weights of strata based on each stratum sample.
 
 
 The fields in "energy_adjusted_mean_data" dataset include:
 
-@param "weeknum" Numbers of weeks (1-52)
-@param "year" Numbers of year (2019-2021)
+@param "weeknum" Numbers of weeks 
+@param "year" Numbers of years 
 @param "energy_for_euro" Purchases' energy divided by inflation fixed euros (MJ/euro)
 @param "elapsed_time" Elapsed time variable (the trend term) by weeks, started from the first week of March 2019, ended to the second week of May 2021 (1-113)
 @param "interrupted01" Binary interrupted variable (0= weeks before the pandemic, 1= weeks after the pandemic)
@@ -96,6 +95,25 @@ new_segs
 #Generate new data to combined 5 strata:
 
 new_strata_data<-data_new_strata(new_strata=new_segs,data=energy_adjusted_without_mean_data, strata_number=5)
+
+#COVID-years and elapsed time variable:
+
+new_strata_data_t<-as.data.table(new_strata_data)
+
+setDT(new_strata_data_t)[year==2019, elapsed_time:=weeknum-9] 
+new_strata_data_t[year==2020, elapsed_time:=(52+weeknum)-9] 
+new_strata_data_t[year==2021, elapsed_time:=(104+weeknum)-9] 
+
+new_strata_data<-as.data.frame(new_strata_data_t)
+
+#Interrupted-variable:
+
+new_strata_data$interrupted01<-ifelse(new_strata_data$year<2020 | (new_strata_data$weeknum<=11 & new_strata_data$year==2020),0,1)
+new_strata_data$interrupted01<-factor(new_strata_data$interrupted01,labels=c("Baseline (from the first week of March 2019 to second week of March 2020)","COVID year 1 (from the second week of March 2020 to the second week of May 2021)"))
+
+#Making time variable after interrupted term:
+
+new_strata_data$weeks_after_preCOVID<-ifelse(new_strata_data$year<2020 | (new_strata_data$weeknum<=11 & new_strata_data$year==2020),0,new_strata_data$elapsed_time)
 
 new_strata_data$Zt0 <- smspline(~ elapsed_time, data=new_strata_data) #smoothing splines
 
