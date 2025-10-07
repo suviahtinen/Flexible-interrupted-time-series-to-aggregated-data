@@ -2,13 +2,10 @@
 
 This repository contains code and resources for analyzing flexible interrupted time series models (segmented mixed-effects models) using aggregated data. These models are particularly useful for evaluating the impact of interventions, policy changes or the effect of unplanned global crises over time when individual-level data is not available or reasonable to represent. By incorporating spline-based random effects and segmented trends, the approach allows for flexible modeling of time-dependent changes and discontinuities. 
 
-The included scripts demonstrate how to analyze changes in food purchasing behavior across various sociodemographic groups, as well as, modes of remote work (study), and how to interpret results using R packages nlme and lmeSplines. There are two folders, where are specify model structures to aggregated data by using modes of remote working/studying (remote work) and different sociodemographic groups (strata). 
+The included scripts demonstrate analysis to study *How the COVID-19 pandemic altered food purchase behavior across various groups*. There are two folders, where are specify model structures by using modes of remote working/studying (remote work) and different sociodemographic groups (strata). 
 
 
 In strata folder, there is algorithm to merge groups by using agglomerative hierarchical clustering and average linkage. This was used to identify the main change profiles, as well as outlying change profiles from different sociodemographic groups. The number of algorithmically combined strata was determined by the maximum of the average Silhouette index score. 
-
-
-
 
 
 For an example, lmeSplines extends the functionality of the nlme package by enabling the inclusion of smoothing spline terms in linear and nonlinear mixed-effects models:
@@ -40,11 +37,11 @@ load(example_data)
 
 #'@param "y" Continuous response variable
 
-#'@param "elapsed_time" Continuous elapsed time variable (the trend term)
+#'@param "elapsed_time" Continuous elapsed time variable (the whole trend)
 
-#'@param "interrup" Binary interruption variable (0= time before the interruption point, 1= time after the interruption point.
+#'@param "interrup" Binary level change variable in the point of interruption (0= time before the point, 1= time after the point)
 
-#'@param "time_after_interrup" Continuous time variable (the slope term after the interruption point)
+#'@param "time_after_interrup" Continuous slope change variable (after the point of interruption)
 
 #'@param "strata" Categorical group variable (for instance, population strata)
 
@@ -56,7 +53,7 @@ load(example_data)
 example_data$Zt <- smspline(~ elapsed_time, data = example_data)
 
 
-# Fit the model
+# Fit models to every stratum, which include group-spesific intercept and Z-matrix:
 
 fit <- lme(y ~ elapsed_time + interrup + time_after_interrup + elapsed_time:strata + interrup:strata + time_after_interrup:strata, data=example_data,
 
