@@ -25,6 +25,8 @@ library(lmeSplines)
 
 library(nlme)
 
+library(ggplot2)
+
 #Code to calculate 95 % confidence intervals:
 
 source("calculate_ci_lmesplines.R")
@@ -51,7 +53,6 @@ load(example_data)
 # Generate spline Z-matrix (using as random effects):
 
 
-
 example_data$Zt <- smspline(~ elapsed_time, data = example_data)
 
 
@@ -63,6 +64,8 @@ random=list(~1|strata,strata=pdIdent(~Zt)))
 
 
 # Summarize results:
+
+summary(fit)
 
 calculate_ci_lmesplines(fit)
 
