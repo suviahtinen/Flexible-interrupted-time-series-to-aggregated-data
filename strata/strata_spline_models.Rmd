@@ -35,7 +35,7 @@ The fields in "energy_adjusted_without_mean_data" dataset include:
 @param "year" Numbers of year (2019-2021)
 @param "energy_MJ" Purchases' energy at megajoule (MJ)
 @param "fixed_euros_no_tobacco_uncat" Inflation fixed euros without tobacco-products
-@param "strata_SES" Numbers of strata (1-114)
+@param "strata_SES" Categorical strata coded as numbers
 @param "sample_weights" Weights of strata based on each stratum sample.
 
 
@@ -47,8 +47,8 @@ The fields in "energy_adjusted_mean_data" dataset include:
 @param "elapsed_time" Elapsed time variable (the trend term) by weeks, started from the first week of March 2019, ended to the second week of May 2021 (1-113)
 @param "interrupted01" Binary interrupted variable (0= weeks before the pandemic, 1= weeks after the pandemic)
 @param "weeks_after_preCOVID" Weeks after the pandemic (the slope term after the interruption point), started from the second week of March 2020 (55-113)
-@param "strata_SES" Numbers of the strata (1-114)
-@param "sample_sizes" Sample sizes for every strata  
+@param "strata_SES" Categorical strata coded as numbers
+@param "sample_sizes" Sample sizes for every stratum
 
 
 ```{r echo=FALSE, eval=TRUE}
@@ -59,18 +59,18 @@ set.seed(123)
 
 source("calculate_ci_lmesplines.R")
 
-#Calculate agglomerative hierarchical clustering results:
+# Calculate agglomerative hierarchical clustering results:
 
 source("cluster_ind_calc_average.R")
 
-#Generate new data to combined strata:  
+# Generate new data to combined strata:  
 
 source("data_new_strata.R")
 
-#Numbers of strata
+# Maximum of strata
 strata_num<-length(levels(energy_adjusted_mean_data$strata_SES))
 
-#Spline models to all strata:
+# Spline models to all strata:
 
 energy_adjusted_mean_data$Zt0 <- smspline(~ elapsed_time, data=energy_adjusted_mean_data) #smoothing splines
 
@@ -81,13 +81,13 @@ calculate_ci_lmesplines(fit_strata_SES_energy)
 
 energy_adjusted_mean_data$Date<- as.Date(paste0(energy_adjusted_mean_data$year, "-", energy_adjusted_mean_data$weeknum, "-", 7), format = "%Y-%U-%u")
 
-#Figure:
+# Figure:
 
 ggplot(energy_adjusted_mean_data,aes(x=Date,y=energy_for_euro,colour=strata_SES)) + geom_line(aes(y = fitted(fit_strata_SES_energy))) + labs(y="Weekly means of energy per used euros (MJ/e)",x="Time (month/year)",colour="Strata") + theme_bw() + scale_x_date(limits=c(as.Date("2019-03-03"),as.Date("2021-05-07")),date_labels = "%m/%Y",date_breaks="3 months") + geom_vline(xintercept=as.Date("2020-03-16"),linetype="dashed") 
-#dev.off()
 
 
-#Results to agglomerative hierarchical clustering:
+
+# Results to agglomerative hierarchical clustering:
 
 new_segs<-cluster_ind_calc_average(elapsed_time=energy_adjusted_mean_data$elapsed_time,strata=energy_adjusted_mean_data$strata_SES,fit_model=fitted(fit_strata_SES_energy),strata_num=strata_num, samples=energy_adjusted_mean_data$sample_sizes)
 
@@ -107,7 +107,7 @@ random=list(~1|new_strata_SES,new_strata_SES=pdIdent(~Zt0)))
 
 calculate_ci_lmesplines(fit_new_strata_SES_energy)
 
-#Figure:
+# Figure:
 
 new_strata_data$Date<- as.Date(paste0(new_strata_data$year, "-", new_strata_data$weeknum, "-", 7), format = "%Y-%U-%u")
 
