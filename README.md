@@ -2,13 +2,10 @@
 
 This repository contains code and resources for analyzing flexible interrupted time series models (segmented mixed-effects models) using aggregated data. These models are particularly useful for evaluating the impact of interventions, policy changes or the effect of unplanned global crises over time when individual-level data is not available or reasonable to represent. By incorporating spline-based random effects and segmented trends, the approach allows for flexible modeling of time-dependent changes and discontinuities. 
 
-The included scripts demonstrate how to analyze changes in food purchasing behavior across various sociodemographic groups, as well as, modes of remote work (study), and how to interpret results using R packages nlme and lmeSplines. There are two folders, where are specify model structures to aggregated data by using modes of remote working/studying (remote work) and different sociodemographic groups (strata). 
+The included scripts demonstrate analysis, which are used to study how to COVID-19 pandemic altered food purchase behavior across varrious groups. There are two folders, where are specify model structures by using modes of remote working/studying (remote work) and different sociodemographic groups (strata). 
 
 
 In strata folder, there is algorithm to merge groups by using agglomerative hierarchical clustering and average linkage. This was used to identify the main change profiles, as well as outlying change profiles from different sociodemographic groups. The number of algorithmically combined strata was determined by the maximum of the average Silhouette index score. 
-
-
-
 
 
 For an example, lmeSplines extends the functionality of the nlme package by enabling the inclusion of smoothing spline terms in linear and nonlinear mixed-effects models:
