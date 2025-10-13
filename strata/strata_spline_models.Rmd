@@ -129,7 +129,7 @@ calculate_ci_lmesplines(fit_new_strata_SES_energy)
 
 new_strata_data$Date<- as.Date(paste0(new_strata_data$year, "-", new_strata_data$weeknum, "-", 7), format = "%Y-%U-%u")
 
-ggplot(new_strata_data,aes(x=Date,y=MJ_per_euros,colour=new_strata_SES)) + geom_point() + geom_line(aes(y = fitted(fit_new_strata_SES_energy))) + labs(y="Energy-for-euro (MJ/€)",x="Time (month/year)",colour="Algorithmically combined strata") + theme_bw() + scale_x_date(limits=c(as.Date("2019-03-03"),as.Date("2021-05-07")),date_labels = "%m/%Y",date_breaks="3 months",date_minor_breaks = "1 week") + scale_colour_manual(values=cbbPalette) + geom_vline(xintercept=as.Date("2020-03-16"),linetype="dashed") 
+ggplot(new_strata_data,aes(x=Date,y=MJ_per_euros,colour=new_strata_SES)) + geom_point() + geom_line(aes(y = fitted(fit_new_strata_SES_energy))) + labs(y="Energy-for-euro (MJ/€)",x="Time (month/year)",colour="Algorithmically combined strata") + theme_bw() + scale_x_date(limits=c(as.Date("2019-03-03"),as.Date("2021-05-07")),date_labels = "%m/%Y",date_breaks="3 months",date_minor_breaks = "1 week") + geom_vline(xintercept=as.Date("2020-03-16"),linetype="dashed") 
 
 
 

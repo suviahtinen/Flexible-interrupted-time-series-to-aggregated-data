@@ -31,9 +31,9 @@ The fields in "mean_data_remotework" dataset include:
 @param "weeknum" Numbers of weeks (1-52)
 @param "year" Numbers of year (2019-2021)
 @param "energy_for_euro" Purchases' energy divided by inflation fixed euros (MJ/euro)
-@param "elapsed_time" Elapsed time variable (the trend term) by weeks, started from the first week of March 2019, ended to the second week of May 2021 (weeks numbered as 1-113)
+@param "elapsed_time" Elapsed time variable (the trend term) by weeks, started from the first week of March 2019, ended to the second week of May 2021 (weeks coded as 1-113)
 @param "interrupted01" Binary interrupted variable (0= weeks before the pandemic started, 1= weeks after the pandemic started)
-@param "weeks_after_preCOVID" Weeks after the pandemic started from the second week of March 2020 (the slope term after the interruption point) (weeks numbered as 55-113)
+@param "weeks_after_preCOVID" Weeks after the pandemic started from the second week of March 2020 (the slope term after the interruption point) (weeks coded as 55-113)
 @param "WorkFirst" 6 modes of the remote work and study: “(I was working/studying) Mostly or completely remotely”, “More often remotely than on-site”, “Approximately as often remotely as on-site”, “Less often remotely than on-site”, “Mostly or completely on-site” and “Not working or studying at all”
 
 
