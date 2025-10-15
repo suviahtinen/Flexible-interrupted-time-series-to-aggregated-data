@@ -103,3 +103,8 @@ Verbyla A, Cullis BR, Kenward MG, Welham SJ. The analysis of designed experiment
 
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+
+## DOI badge
+
+[![DOI](https://zenodo.org/badge/1070599948.svg)](https://doi.org/10.5281/zenodo.17358427)
